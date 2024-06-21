@@ -17,11 +17,16 @@ port = os.getenv("PORT", "8000")
 
 port = int(port)
 
+SUPPORT_SPEAKERS=["v2/en_speaker_6","v2/en_speaker_9"]
+DEFAULT_SPEAKER = "v2/en_speaker_6"
 
 def predict(processor, model, text, voice_preset=None):
+    voice_use = DEFAULT_SPEAKER
+    if voice_preset in SUPPORT_SPEAKERS:
+        voice_use = voice_preset
     # We need to convert our text into something the model can understand,
     # using the processor. We're going to have it return PyTorch tensors.
-    inputs = processor(text, voice_preset=voice_preset, return_tensors="pt")
+    inputs = processor(text, voice_preset=voice_use, return_tensors="pt")
 
     # Now we need to move these tensors to the GPU, so they can be processed
     # by the model.
