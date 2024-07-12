@@ -28,8 +28,8 @@ def predict(processor, model, text, voice_preset=None):
     voice_use = DEFAULT_SPEAKER
     if voice_preset in SUPPORT_SPEAKERS:
         voice_use = voice_preset
-    print(voice_preset, text)
-    print("voice_use", voice_use)
+    print("voice_use:", voice_use)
+    print(text)
     # We need to convert our text into something the model can understand,
     # using the processor. We're going to have it return PyTorch tensors.
     inputs = processor(text, voice_preset=voice_use, return_tensors="pt")
@@ -39,7 +39,11 @@ def predict(processor, model, text, voice_preset=None):
     inputs = {k: v.to("cuda") for k, v in inputs.items()}
 
     # The model generates more tensors that can be decoded into audio.
-    speech_values = model.generate(**inputs, do_sample=True)
+    speech_values = model.generate(
+        **inputs,
+        # add pad token id here
+        pad_token_id=processor.tokenizer.pad_token_id,
+        do_sample=True)
 
     # For interpreting the tensors back into audio, we need
     # to know the sampling_rate that was used to generate it.
