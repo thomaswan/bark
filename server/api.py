@@ -12,18 +12,24 @@ from pydantic import BaseModel
 import uvicorn
 import os
 
+os.environ["SUNO_OFFLOAD_CPU"] = 'True'
+os.environ["SUNO_USE_SMALL_MODELS"] = 'True'
+
 host = os.getenv("HOST", "127.0.0.1")
 port = os.getenv("PORT", "8000")
 
 port = int(port)
 
-SUPPORT_SPEAKERS=["v2/en_speaker_6","v2/en_speaker_9"]
+SUPPORT_SPEAKERS=["v2/en_speaker_6","v2/en_speaker_9",
+                  "v2/zh_speaker_8","v2/zh_speaker_9"]
 DEFAULT_SPEAKER = "v2/en_speaker_6"
 
 def predict(processor, model, text, voice_preset=None):
     voice_use = DEFAULT_SPEAKER
     if voice_preset in SUPPORT_SPEAKERS:
         voice_use = voice_preset
+    print(voice_preset, text)
+    print("voice_use", voice_use)
     # We need to convert our text into something the model can understand,
     # using the processor. We're going to have it return PyTorch tensors.
     inputs = processor(text, voice_preset=voice_use, return_tensors="pt")
