@@ -6,4 +6,4 @@ optimum
 soundfile
 pydub
 pydantic
-git+https://github.com/huggingface/transformers.git@v4.33.2
+git+https://github.com/huggingface/transformers.git@v4.42.4
