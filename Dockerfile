@@ -10,6 +10,10 @@ COPY requirements.txt requirements.txt
 
 RUN pip install -r requirements.txt
 
+ARG USE_SMALL
+
+ENV USE_SMALL=$USE_SMALL
+
 COPY server/model.py .
 RUN python -c "from model import load;load(True);"
 
